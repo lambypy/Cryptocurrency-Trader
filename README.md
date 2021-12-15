@@ -1,4 +1,4 @@
-# Cryptocurrency-Trader
+# Cryptocurrency-Trader 💵
 
 I have been manually trading cryptocurrency for some years now, mostly for fun, but also to learn and gain more knowledge of markets. In expanding my understanding, I looked to automation of some of the strategies that I used. There is much time throughout the day where I am not available to manually trade, and this presents opportunity in cryptocurrency which the markets exist 24/7. 
 
