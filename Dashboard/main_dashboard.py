@@ -1,30 +1,39 @@
 import dash
-from dash import dcc, html, Input, Output, State
 import pandas as pd
+import plotly.express as px
 
-app = dash.Dash(__name__)
+from dash import dcc, html, Input, Output, State
 
-app.layout = html.Div([
-    html.H1("Investment Portfolio Dashboard"),
+
+investment_data_pract = {
+    "Category": ["Stocks", "Alternative Investments"],
+    "Value": [30000, 40000],
+    "Composition": [["AAPL", "MSFT", "GOOGL"], ["Real Estate", "Lego", "Watches"]]
+}
+
+
+total_value = sum(investment_data_pract["Value"])
+composition_pct = [value / total_value * 100 for value in investment_data_pract["Value"]]
+
+
+layout = html.Div([
     html.Div([
-        html.Label("Stock Symbol"),
-        dcc.Input(id='stock-symbol', type='text', value='AAPL'),
-        html.Label("Purchase Price"),
-        dcc.Input(id='purchase-price', type='number', value=0),
-        html.Label("Quantity"),
-        dcc.Input(id='quantity', type='number', value=0),
-        html.Button('Add to Portfolio', id='add-button', n_clicks=0),
-    ]),
-    html.Div(id='portfolio-table')
+    html.H2('Total Investment Value'),
+    html.H3(f'${total_value:.2f}'),
+    html.H2('Investment Composition'),
+    dcc.Graph(
+        id='investment-composition-graph',
+        figure=px.pie(
+            values=composition_pct,
+            names=investment_data_pract['Category'],
+            title='Investment Composition'
+            )
+        )
+    ])
 ])
 
-@app.callback(
-    Output('portfolio-table', 'children'),
-    [Input('add-button', 'n_clicks')],
-    [State('stock-symbol', 'value'),
-     State('purchase-price', 'value'),
-     State('quantity', 'value')]
-)
+
+
 def update_portfolio_table(n_clicks, stock_symbol, purchase_price, quantity):
     if n_clicks > 0:
         new_entry = {'Symbol': stock_symbol, 'Purchase Price': purchase_price, 'Quantity': quantity}
@@ -40,5 +49,3 @@ def update_portfolio_table(n_clicks, stock_symbol, purchase_price, quantity):
     else:
         return html.Table()
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
